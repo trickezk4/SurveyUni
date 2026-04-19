@@ -1,82 +1,307 @@
-import type { FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
+import {
+  ArrowLeft,
+  Lock,
+  User,
+  AlertCircle,
+  Eye,
+  EyeOff,
+  GraduationCap,
+  BookOpen,
+  Building,
+  UserCog,
+  Shield,
+} from 'lucide-react'
+import { useAuth, type UserRole } from '../contexts/AuthContext'
+
+const roleInfo: Record<UserRole, { name: string; icon: typeof GraduationCap; color: string; ring: string; btn: string }> =
+  {
+    student: { name: 'Sinh viên', icon: GraduationCap, color: 'blue', ring: 'focus:ring-blue-500', btn: 'bg-blue-600 hover:bg-blue-700' },
+    lecturer: { name: 'Giảng viên', icon: BookOpen, color: 'green', ring: 'focus:ring-green-500', btn: 'bg-green-600 hover:bg-green-700' },
+    department: { name: 'Khoa', icon: Building, color: 'purple', ring: 'focus:ring-purple-500', btn: 'bg-purple-600 hover:bg-purple-700' },
+    academic_affairs: {
+      name: 'Phòng Đào tạo',
+      icon: UserCog,
+      color: 'amber',
+      ring: 'focus:ring-amber-500',
+      btn: 'bg-amber-600 hover:bg-amber-700',
+    },
+    admin: { name: 'Quản trị viên', icon: Shield, color: 'red', ring: 'focus:ring-red-500', btn: 'bg-red-600 hover:bg-red-700' },
+  }
+
+const roleIconBg: Record<UserRole, string> = {
+  student: 'bg-blue-100',
+  lecturer: 'bg-green-100',
+  department: 'bg-purple-100',
+  academic_affairs: 'bg-amber-100',
+  admin: 'bg-red-100',
+}
+
+const roleIconFg: Record<UserRole, string> = {
+  student: 'text-blue-600',
+  lecturer: 'text-green-600',
+  department: 'text-purple-600',
+  academic_affairs: 'text-amber-600',
+  admin: 'text-red-600',
+}
+
+const roleText: Record<UserRole, string> = {
+  student: 'text-blue-600',
+  lecturer: 'text-green-600',
+  department: 'text-purple-600',
+  academic_affairs: 'text-amber-600',
+  admin: 'text-red-600',
+}
+
+const roleDemoBg: Record<UserRole, string> = {
+  student: 'bg-blue-50 border-blue-200',
+  lecturer: 'bg-green-50 border-green-200',
+  department: 'bg-purple-50 border-purple-200',
+  academic_affairs: 'bg-amber-50 border-amber-200',
+  admin: 'bg-red-50 border-red-200',
+}
+
+const roleDemoText: Record<UserRole, string> = {
+  student: 'text-blue-900',
+  lecturer: 'text-green-900',
+  department: 'text-purple-900',
+  academic_affairs: 'text-amber-900',
+  admin: 'text-red-900',
+}
+
+const roleDemoMuted: Record<UserRole, string> = {
+  student: 'text-blue-700',
+  lecturer: 'text-green-700',
+  department: 'text-purple-700',
+  academic_affairs: 'text-amber-700',
+  admin: 'text-red-700',
+}
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const { login } = useAuth()
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    navigate('/')
+  const selectedRole = (location.state as { selectedRole?: UserRole } | null)?.selectedRole
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (!selectedRole) {
+      navigate('/login', { replace: true })
+    }
+  }, [selectedRole, navigate])
+
+  if (!selectedRole) {
+    return null
   }
 
-  return (
-    <div className="min-h-screen grid grid-cols-1 justify-items-center bg-black overflow-hidden relative text-slate-50">
-      <div className="w-full max-w-[980px] bg-transparent z-10 flex flex-col items-center justify-center">
-        {/* Login Hero Section - Abstracted */}
-        <div className="p-12 pb-8 flex flex-col justify-center items-center gap-4 text-center">
-          <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] text-white m-0 mb-4 tracking-tight font-bold">Đăng nhập cục bộ</h1>
-          <p className="m-0 text-base leading-relaxed text-slate-50/90 max-w-[680px]">
-            Chào mừng bạn đến với Hệ thống khảo sát môn học. Vui lòng đăng nhập để tiếp tục.
-          </p>
-        </div>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    if (!username.trim() || !password) {
+      setError('Vui lòng nhập đầy đủ thông tin')
+      return
+    }
+    setLoading(true)
+    try {
+      const success = await login(username.trim(), password, selectedRole)
+      if (success) {
+        navigate('/')
+      } else {
+        setError('Tên đăng nhập hoặc mật khẩu không đúng')
+      }
+    } catch {
+      setError('Đã xảy ra lỗi, vui lòng thử lại')
+    } finally {
+      setLoading(false)
+    }
+  }
 
-        {/* Login Panel */}
-        <div className="flex items-center justify-center p-[2rem_1.5rem_3rem] w-full">
-          <div className="grid gap-6 w-full max-w-[520px] grid-cols-1">
-            <div className="w-full rounded-2xl bg-[#090a0e] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.35)] p-8">
-              <div className="mb-7">
-                <h2 className="text-[1.35rem] m-0 mb-1.5 font-medium text-white">Đăng nhập</h2>
-                <p className="m-0 text-[0.92rem] text-slate-400">Nhập email và mật khẩu để vào hệ thống.</p>
+  const role = roleInfo[selectedRole]
+  const RoleIcon = role.icon
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
+        <button
+          type="button"
+          onClick={() => navigate('/login')}
+          className="flex items-center gap-2 text-gray-700 hover:text-gray-900 mb-8 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Chọn vai trò khác</span>
+        </button>
+
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
+          <div className="text-center mb-8">
+            <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${roleIconBg[selectedRole]} mb-4`}>
+              <RoleIcon className={`w-10 h-10 ${roleIconFg[selectedRole]}`} />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Đăng nhập</h1>
+            <p className="text-gray-600">
+              Dành cho <span className={`font-semibold ${roleText[selectedRole]}`}>{role.name}</span>
+            </p>
+          </div>
+
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+              <p className="text-red-800 text-sm">{error}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Tên đăng nhập</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="w-5 h-5 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className={`w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 ${role.ring} focus:border-transparent outline-none`}
+                  placeholder="Nhập tên đăng nhập"
+                  disabled={loading}
+                  autoComplete="username"
+                />
               </div>
-              <form onSubmit={handleSubmit} noValidate>
-                <div className="mb-4">
-                  <label htmlFor="login-email" className="block text-[0.82rem] font-medium text-white mb-1.5">Email</label>
-                  <input
-                    id="login-email"
-                    name="email"
-                    type="email"
-                    autoComplete="username"
-                    placeholder="ban@truong.edu.vn"
-                    required
-                    className="w-full box-border px-[0.85rem] py-[0.65rem] rounded-lg border border-white/10 bg-gray-900 text-slate-50 font-inherit text-[0.95rem] transition-all focus:outline-none focus:border-indigo-500 focus:ring-[3px] focus:ring-indigo-500/20"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="login-password" className="block text-[0.82rem] font-medium text-white mb-1.5">Mật khẩu</label>
-                  <input
-                    id="login-password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    placeholder="••••••••"
-                    required
-                    className="w-full box-border px-[0.85rem] py-[0.65rem] rounded-lg border border-white/10 bg-gray-900 text-slate-50 font-inherit text-[0.95rem] transition-all focus:outline-none focus:border-indigo-500 focus:ring-[3px] focus:ring-indigo-500/20"
-                  />
-                </div>
-                <div className="flex items-center justify-between gap-3 mb-5 flex-wrap">
-                  <label className="flex items-center gap-[0.45rem] text-[0.85rem] text-slate-400 cursor-pointer select-none">
-                    <input type="checkbox" name="remember" defaultChecked className="w-4 h-4 accent-indigo-500" />
-                    Ghi nhớ đăng nhập
-                  </label>
-                  <Link className="text-[0.85rem] text-indigo-400 no-underline font-medium hover:underline" to="/login/forgot">
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">Mật khẩu</label>
+                {selectedRole !== 'admin' && (
+                  <button
+                    type="button"
+                    onClick={() => navigate('/login/forgot')}
+                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  >
                     Quên mật khẩu?
-                  </Link>
+                  </button>
+                )}
+              </div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="w-5 h-5 text-gray-400" />
                 </div>
-                <button type="submit" className="w-full py-3 px-4 border-none rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 text-white font-inherit text-[0.95rem] font-semibold cursor-pointer shadow-md transition-all hover:brightness-110 active:scale-95">
-                  Đăng nhập
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 ${role.ring} focus:border-transparent outline-none`}
+                  placeholder="Nhập mật khẩu"
+                  disabled={loading}
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  disabled={loading}
+                  aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <Eye className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                  )}
                 </button>
-              </form>
-              <p className="mt-6 text-center text-[0.88rem] text-slate-400">
-                <Link to="/" className="text-indigo-400 font-medium no-underline hover:underline">← Về trang chức năng</Link>
-              </p>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 px-4 ${role.btn} text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed`}
+            >
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+                  <span>Đang đăng nhập...</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-5 h-5" />
+                  <span>Đăng nhập</span>
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className={`mt-6 p-4 rounded-lg border ${roleDemoBg[selectedRole]}`}>
+            <p className={`text-sm ${roleDemoText[selectedRole]} font-medium mb-2`}>Tài khoản demo cho {role.name}:</p>
+            <div className="space-y-1 text-sm">
+              {selectedRole === 'student' && (
+                <>
+                  <p className={roleDemoMuted[selectedRole]}>
+                    Username: <code className="bg-white px-2 py-0.5 rounded">sv001</code>
+                  </p>
+                  <p className={roleDemoMuted[selectedRole]}>
+                    Password: <code className="bg-white px-2 py-0.5 rounded">123456</code>
+                  </p>
+                </>
+              )}
+              {selectedRole === 'lecturer' && (
+                <>
+                  <p className={roleDemoMuted[selectedRole]}>
+                    Username: <code className="bg-white px-2 py-0.5 rounded">gv001</code>
+                  </p>
+                  <p className={roleDemoMuted[selectedRole]}>
+                    Password: <code className="bg-white px-2 py-0.5 rounded">123456</code>
+                  </p>
+                </>
+              )}
+              {selectedRole === 'department' && (
+                <>
+                  <p className={roleDemoMuted[selectedRole]}>
+                    Username: <code className="bg-white px-2 py-0.5 rounded">khoa_cntt</code>
+                  </p>
+                  <p className={roleDemoMuted[selectedRole]}>
+                    Password: <code className="bg-white px-2 py-0.5 rounded">123456</code>
+                  </p>
+                </>
+              )}
+              {selectedRole === 'academic_affairs' && (
+                <>
+                  <p className={roleDemoMuted[selectedRole]}>
+                    Username: <code className="bg-white px-2 py-0.5 rounded">pdt001</code>
+                  </p>
+                  <p className={roleDemoMuted[selectedRole]}>
+                    Password: <code className="bg-white px-2 py-0.5 rounded">123456</code>
+                  </p>
+                </>
+              )}
+              {selectedRole === 'admin' && (
+                <>
+                  <p className={roleDemoMuted[selectedRole]}>
+                    Username: <code className="bg-white px-2 py-0.5 rounded">admin</code>
+                  </p>
+                  <p className={roleDemoMuted[selectedRole]}>
+                    Password: <code className="bg-white px-2 py-0.5 rounded">admin123</code>
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
+
+        <p className="text-center mt-6 text-gray-600 text-sm">
+          <Link to="/" className="text-blue-600 font-medium hover:underline">
+            ← Về trang chức năng
+          </Link>
+        </p>
+        <div className="text-center mt-4 text-gray-500 text-sm">
+          <p>© 2026 Trường Đại học Công nghệ Thông tin - UIT</p>
+        </div>
       </div>
-      {/* Background Decor */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse 80% 60% at 20% 20%, rgba(99, 102, 241, 0.15), transparent 55%), linear-gradient(155deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%)'
-      }} />
     </div>
   )
 }

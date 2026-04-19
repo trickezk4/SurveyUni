@@ -2,14 +2,13 @@ import { useState, useEffect } from 'react';
 import { 
   ArrowLeft, 
   Users, 
-  Plus, 
   Search, 
-  Filter, 
   Edit, 
   Trash2, 
   Lock, 
   Unlock,
   Eye,
+  EyeOff,
   Download,
   RefreshCw,
   X,
@@ -136,6 +135,7 @@ export default function UserManagementPage() {
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedRolePermissions, setSelectedRolePermissions] = useState<RolePermissions | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -147,9 +147,35 @@ export default function UserManagementPage() {
     password: ''
   });
 
+  const userRole = localStorage.getItem('userRole');
+
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (userRole === 'admin') {
+      fetchUsers();
+    }
+  }, [userRole]);
+
+  if (userRole !== 'admin') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+        <div className="bg-white p-10 rounded-2xl shadow-lg border border-gray-100 max-w-md w-full text-center">
+          <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-red-100">
+            <Lock className="w-10 h-10" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3 tracking-tight">Truy cập bị từ chối</h2>
+          <p className="text-gray-500 mb-8 leading-relaxed">
+            Bạn không có quyền truy cập trang này. Chỉ có <strong className="text-gray-800 font-semibold">Quản trị viên (Admin)</strong> mới được phép vào khu vực Quản lý người dùng.
+          </p>
+          <button
+            onClick={() => navigate('/')}
+            className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all focus:ring-4 focus:ring-blue-500/20 active:scale-[0.98]"
+          >
+            Quay lại trang chủ
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -271,6 +297,7 @@ export default function UserManagementPage() {
       department: '',
       password: ''
     });
+    setShowPassword(false);
     setShowAddEditModal(true);
   };
 
@@ -284,6 +311,7 @@ export default function UserManagementPage() {
       department: user.department || '',
       password: ''
     });
+    setShowPassword(false);
     setShowAddEditModal(true);
   };
 
@@ -442,6 +470,8 @@ export default function UserManagementPage() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  autoComplete="off"
+                  name="search-users"
                 />
               </div>
             </div>
@@ -703,21 +733,28 @@ export default function UserManagementPage() {
                     />
                   </div>
                 </div>
-
-                {!selectedUser && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Mật khẩu <span className="text-red-500">*</span>
-                    </label>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Mật khẩu {selectedUser ? <span className="text-gray-400 font-normal ml-1">(Để trống nếu không đổi)</span> : <span className="text-red-500">*</span>}
+                  </label>
+                  <div className="relative">
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Nhập mật khẩu"
+                      className="w-full px-4 pr-12 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder={selectedUser ? "Nhập mật khẩu mới (tùy chọn)" : "Nhập mật khẩu"}
+                      autoComplete="new-password"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                    >
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
                   </div>
-                )}
+                </div>
 
                 {/* Permissions Preview */}
                 <div className="bg-gray-50 rounded-lg p-4">
