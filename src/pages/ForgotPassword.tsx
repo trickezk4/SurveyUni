@@ -1,78 +1,131 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Mail, ArrowLeft, CheckCircle } from 'lucide-react'
 
 export function ForgotPassword() {
-  return (
-    <div className="min-h-screen grid grid-cols-1 justify-items-center bg-black overflow-hidden relative text-slate-50">
-      <div className="w-full max-w-[980px] bg-transparent z-10 flex flex-col items-center justify-center">
-        <div className="p-12 pb-8 flex flex-col justify-center items-center gap-4 text-center">
-          <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] text-white m-0 mb-4 tracking-tight font-bold">Hệ thống khảo sát môn học</h1>
-          <p className="m-0 text-base leading-relaxed text-slate-50/90 max-w-[680px]">
-            Lưới chức năng và báo cáo thống nhất — đăng nhập để quản lý khảo sát, người dùng và học kỳ.
-          </p>
-        </div>
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [errors, setErrors] = useState<{ email?: string }>({})
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-        <div className="flex items-center justify-center p-[2rem_1.5rem_3rem] w-full">
-          <div className="grid gap-6 w-full max-w-[520px] grid-cols-1">
-            <div className="w-full rounded-2xl bg-[#090a0e] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.35)] p-8 text-left">
-              <div className="mb-7">
-                <h2 className="text-[1.35rem] m-0 mb-1.5 font-medium text-white">Lấy lại mật khẩu</h2>
-                <p className="m-0 text-[0.92rem] text-slate-400">Chọn hình thức nhận mã xác minh và nhập thông tin tài khoản.</p>
-              </div>
-              <form onSubmit={(e) => e.preventDefault()} noValidate>
-                <div className="mb-4">
-                  <label htmlFor="reset-method" className="block text-[0.82rem] font-medium text-white mb-1.5">Hình thức gửi mã xác minh</label>
-                  <select 
-                    id="reset-method" 
-                    name="resetMethod" 
-                    defaultValue="email"
-                    className="appearance-none w-full box-border px-[0.85rem] py-[0.65rem] rounded-lg border border-white/10 bg-gray-900 text-slate-50 font-inherit text-[0.95rem] transition-all focus:outline-none focus:border-indigo-500 focus:ring-[3px] focus:ring-indigo-500/20"
-                    style={{
-                      backgroundImage: 'linear-gradient(45deg, transparent 50%, #9ca3af 50%), linear-gradient(135deg, #9ca3af 50%, transparent 50%)',
-                      backgroundPosition: 'calc(100% - 1rem) calc(50% - 0.15rem), calc(100% - 0.65rem) calc(50% - 0.15rem)',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundSize: '0.45rem 0.45rem'
-                    }}
-                  >
-                    <option value="email">Qua Email</option>
-                    <option value="phone">Qua SMS</option>
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="reset-account" className="block text-[0.82rem] font-medium text-white mb-1.5">Mã tài khoản</label>
-                  <input
-                    id="reset-account"
-                    name="accountId"
-                    type="text"
-                    placeholder="Nhập mã tài khoản"
-                    required
-                    className="w-full box-border px-[0.85rem] py-[0.65rem] rounded-lg border border-white/10 bg-gray-900 text-slate-50 font-inherit text-[0.95rem] transition-all focus:outline-none focus:border-indigo-500 focus:ring-[3px] focus:ring-indigo-500/20"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="reset-email" className="block text-[0.82rem] font-medium text-white mb-1.5">Email đã đăng ký trong hệ thống</label>
-                  <input
-                    id="reset-email"
-                    name="resetEmail"
-                    type="email"
-                    placeholder="ban@truong.edu.vn"
-                    required
-                    className="w-full box-border px-[0.85rem] py-[0.65rem] rounded-lg border border-white/10 bg-gray-900 text-slate-50 font-inherit text-[0.95rem] transition-all focus:outline-none focus:border-indigo-500 focus:ring-[3px] focus:ring-indigo-500/20"
-                  />
-                </div>
-                <button type="submit" className="w-full py-3 px-4 rounded-lg bg-transparent border border-indigo-500 text-white font-inherit text-[0.95rem] font-semibold cursor-pointer shadow-md transition-all hover:bg-indigo-500/20 active:scale-95 mt-2">
-                  Gửi
-                </button>
-              </form>
-              <p className="mt-4 text-center text-[0.82rem] text-slate-400">
-                <Link to="/login" className="text-indigo-400 font-medium no-underline hover:underline">← Quay lại đăng nhập</Link>
-              </p>
-            </div>
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(value)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const newErrors: { email?: string } = {}
+    if (!email.trim()) {
+      newErrors.email = 'Vui lòng nhập email'
+    } else if (!validateEmail(email)) {
+      newErrors.email = 'Email không hợp lệ'
+    }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+    setIsLoading(true)
+    setErrors({})
+    window.setTimeout(() => {
+      setIsLoading(false)
+      setIsSubmitted(true)
+    }, 1200)
+  }
+
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="w-10 h-10 text-green-600" />
           </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Đã gửi hướng dẫn</h2>
+          <p className="text-gray-600 mb-2">
+            Nếu email <span className="font-semibold text-gray-900">{email}</span> tồn tại trong hệ thống, bạn sẽ nhận được
+            hướng dẫn đặt lại mật khẩu.
+          </p>
+          <p className="text-sm text-gray-500 mb-6">(Bản demo: không gửi email thật.)</p>
+          <button
+            type="button"
+            onClick={() => navigate('/login')}
+            className="text-blue-600 hover:text-blue-700 font-medium"
+          >
+            Quay lại chọn loại tài khoản
+          </button>
         </div>
       </div>
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse 80% 60% at 20% 20%, rgba(99, 102, 241, 0.15), transparent 55%), linear-gradient(155deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%)'
-      }} />
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Quay lại</span>
+        </button>
+
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Mail className="w-8 h-8 text-blue-600" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Quên mật khẩu?</h1>
+          <p className="text-gray-600">Nhập email đã đăng ký để nhận hướng dẫn đặt lại mật khẩu</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="forgot-email" className="block text-sm font-medium text-gray-700 mb-2">
+              Email
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="email"
+                id="forgot-email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  setErrors({ ...errors, email: undefined })
+                }}
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+                  errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                }`}
+                placeholder="ban@truong.edu.vn"
+                autoComplete="email"
+              />
+            </div>
+            {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? 'Đang gửi...' : 'Gửi hướng dẫn'}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            Bạn đã nhớ mật khẩu?{' '}
+            <button
+              type="button"
+              onClick={() => navigate('/login')}
+              className="text-blue-600 hover:text-blue-700 font-medium"
+            >
+              Đăng nhập
+            </button>
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
