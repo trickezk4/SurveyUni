@@ -1,0 +1,271 @@
+body {
+    font-family: 'Segoe UI', Arial;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    padding: 20px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+.header p {
+    color: #6b7280;
+}
+
+/* Button */
+.btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Cards */
+.cards {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.card {
+    flex: 1;
+    background: white;
+    padding: 18px;
+    border-radius: 16px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.green {
+    color: #16a34a;
+}
+
+.red {
+    color: #dc2626;
+}
+
+/* Search */
+.search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+input,
+select {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 5px rgba(37, 99, 235, 0.3);
+}
+
+/* Filter */
+.filter {
+    margin: 10px 0;
+}
+
+.filter button {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: none;
+    background: #e5e7eb;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.filter button:hover {
+    background: #2563eb;
+    color: white;
+}
+
+/* Table */
+table {
+    width: 100%;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+}
+
+thead {
+    background: #f1f5f9;
+}
+
+th {
+    text-align: left;
+    padding: 15px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+td {
+    padding: 15px;
+}
+
+tr {
+    border-bottom: 1px solid #eee;
+    transition: 0.2s;
+}
+
+tr:hover {
+    background: #f9fafb;
+    transform: scale(1.01);
+}
+
+/* Status */
+.status-done {
+    color: #16a34a;
+    font-weight: 500;
+}
+
+.status-pending {
+    color: #dc2626;
+    font-weight: 500;
+}
+
+/* Action buttons */
+.btn-blue {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+.btn-green {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+}
+
+/* Progress */
+.progress-box {
+    margin-top: 20px;
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    padding: 20px;
+    border-radius: 16px;
+}
+
+.progress-bar {
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+#progress {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    transition: 0.5s;
+}
+
+/* action layout */
+/* ===== ACTION GROUP (FIX GỌN LẠI) ===== */
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ===== ICON BUTTON ===== */
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: #f3f4f6;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    font-size: 16px;
+}
+
+.icon-btn:hover {
+    background: #e5e7eb;
+}
+
+/* nút 3 chấm */
+.more-btn {
+    font-size: 18px;
+}
+
+/* ===== MENU WRAPPER ===== */
+.menu-wrapper {
+    position: relative;
+}
+
+/* ===== DROPDOWN MENU ===== */
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    width: 230px;
+    display: none;
+    overflow: hidden;
+    z-index: 999;
+
+    animation: fadeIn 0.2s ease;
+}
+
+/* item menu */
+.dropdown-menu div {
+    padding: 12px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.dropdown-menu div:hover {
+    background: #f1f5f9;
+}
+
+/* divider nhẹ */
+.dropdown-menu div:not(:last-child) {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

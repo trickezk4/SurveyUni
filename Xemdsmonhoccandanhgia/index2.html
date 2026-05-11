@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách môn học</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1>Danh sách môn học cần đánh giá</h1>
+                <p>Xem và theo dõi tiến độ khảo sát</p>
+            </div>
+            <button class="btn">🔄 Làm mới</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="cards">
+            <div class="card">Tổng số môn<br><b id="total"></b></div>
+            <div class="card green">Đã gửi<br><b id="done"></b></div>
+            <div class="card red">Chưa gửi<br><b id="pending"></b></div>
+        </div>
+
+        <!-- Search -->
+        <div class="search">
+            <input id="searchInput" placeholder="Tìm kiếm...">
+            <select id="sortSelect">
+                <option value="name">Sắp xếp: Tên môn</option>
+                <option value="status">Sắp xếp: Trạng thái</option>
+                <option value="code">Sắp xếp: Mã môn</option>
+            </select>
+        </div>
+
+        <!-- Filter -->
+        <div class="filter">
+            <button onclick="filterCourses('all')">Tất cả</button>
+            <button onclick="filterCourses('done')">Đã gửi</button>
+            <button onclick="filterCourses('pending')">Chưa gửi</button>
+        </div>
+
+        <!-- Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã môn</th>
+                    <th>Tên môn</th>
+                    <th>Giảng viên</th>
+                    <th>Tín chỉ</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+
+        <!-- Progress -->
+        <div class="progress-box">
+            <span id="progressText"></span>
+            <b id="progressPercent"></b>
+            <div class="progress-bar">
+                <div id="progress"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script2.js"></script>
+</body>
+
+</html>

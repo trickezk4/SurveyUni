@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Trạng thái khảo sát</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1>Trạng thái khảo sát</h1>
+                <p>Theo dõi tiến độ khảo sát</p>
+            </div>
+            <div>
+                <button class="btn btn-blue">Xuất báo cáo</button>
+                <button class="btn btn-gray">Làm mới</button>
+            </div>
+        </div>
+        <div class="alert">
+            Bạn có 3 môn chưa hoàn thành khảo sát. Còn -23 ngày.
+        </div>
+
+        <!-- Cards -->
+        <div class="cards">
+            <div class="card">
+                <p>Tổng số môn</p>
+                <h2>6</h2>
+            </div>
+
+            <div class="card">
+                <p>Đã gửi</p>
+                <h2 class="green">3</h2>
+            </div>
+
+            <div class="card">
+                <p>Chưa gửi</p>
+                <h2 class="red">3</h2>
+            </div>
+
+            <div class="card">
+                <p>Tỷ lệ hoàn thành</p>
+                <h2>50%</h2>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-box">
+            <div class="progress-header">
+                <span>Đã gửi: 3/6</span>
+                <b>50%</b>
+            </div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="search">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm...">
+            <button class="btn btn-blue" onclick="filterCourses('all')">Tất cả</button>
+            <button class="btn btn-gray" onclick="filterCourses('done')">Đã gửi</button>
+            <button class="btn btn-gray" onclick="filterCourses('pending')">Chưa gửi</button>
+        </div>
+
+        <!-- Course list -->
+        <div class="course-list" id="courseList"></div>
+
+    </div>
+    <div id="modal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+        <div style="background:white; padding:20px; width:300px; margin:100px auto; border-radius:10px;">
+
+            <h3 id="modalTitle"></h3>
+            <div id="modalContent"></div>
+
+            <div id="editBox" style="display:none;">
+                <input id="editName" placeholder="Tên môn"><br><br>
+                <input id="editTeacher" placeholder="Giảng viên"><br><br>
+                <button onclick="saveEdit()">Lưu</button>
+            </div>
+
+            <br>
+            <button onclick="closeModal()">Đóng</button>
+
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
