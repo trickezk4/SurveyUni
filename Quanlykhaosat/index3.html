@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý khảo sát</title>
+    <link rel="stylesheet" href="style3.css">
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div class="container">
+
+            <!-- Header -->
+            <div class="header">
+                <div>
+                    <h1>Quản lý khảo sát</h1>
+                    <p>Tổng số: <span id="total">0</span> khảo sát</p>
+                </div>
+                <button class="btn-create">+ Tạo khảo sát</button>
+            </div>
+
+            <!-- List -->
+            <div id="list"></div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2>Chi tiết khảo sát</h2>
+                <span class="close" onclick="closeModal()">✕</span>
+            </div>
+
+            <div id="modalBody"></div>
+
+            <div class="modal-footer">
+                <button class="btn-edit">Chỉnh sửa</button>
+                <button class="btn-close" onclick="closeModal()">Đóng</button>
+            </div>
+
+        </div>
+    </div>
+    <!-- Modal Create -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2>Tạo khảo sát mới</h2>
+                <span class="close" onclick="closeCreate()">✕</span>
+            </div>
+
+            <div id="createBody">
+
+                <label>Tiêu đề khảo sát *</label>
+                <input id="cTitle" class="input" placeholder="Nhập tiêu đề khảo sát">
+
+                <label>Mô tả *</label>
+                <textarea id="cDesc" class="input" placeholder="Nhập mô tả khảo sát"></textarea>
+
+                <label>Loại khảo sát *</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="ctype" value="Nội bộ" checked onchange="toggleCreateType()"> Câu
+                        hỏi
+                        nội bộ (hệ thống)</label>
+                    <label><input type="radio" name="ctype" value="Google Form" onchange="toggleCreateType()"> Google
+                        Form
+                        (link)</label>
+                </div>
+
+                <!-- Nội bộ -->
+                <div id="cInternal">
+                    <label>Câu hỏi khảo sát *</label>
+
+                    <div id="cQuestionList"></div>
+
+                    <div class="q-row">
+                        <input id="cQuestionInput" class="input" placeholder="Nhập nội dung câu hỏi">
+                        <select class="input" style="width:160px">
+                            <option>Đánh giá (1-5)</option>
+                        </select>
+                        <button class="btn-create" onclick="addCreateQuestion()">+</button>
+                    </div>
+                </div>
+
+                <!-- Google Form -->
+                <div id="cLinkBox" style="display:none;">
+                    <label>Link Google Form *</label>
+                    <input id="cLink" class="input" placeholder="Nhập link Google Form">
+                </div>
+
+                <label>Trạng thái</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="cstatus" value="Hoạt động" checked> Hoạt động</label>
+                    <label><input type="radio" name="cstatus" value="Không hoạt động"> Không hoạt động</label>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-edit" onclick="createSurvey()">✔ Tạo mới</button>
+                <button class="btn-close" onclick="closeCreate()">Hủy</button>
+            </div>
+
+        </div>
+    </div>
+    <script src="script3.js"></script>
+</body>
+
+</html>

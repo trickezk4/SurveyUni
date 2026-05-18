@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thực hiện khảo sát</title>
+    <link rel="stylesheet" href="survey.css">
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+        <!-- HEADER -->
+        <div class="header-box">
+            <div class="icon">📋</div>
+            <div>
+                <h1>Thực hiện khảo sát môn học</h1>
+                <p>Vui lòng đánh giá chất lượng giảng dạy của môn học</p>
+            </div>
+        </div>
+
+        <!-- CHỌN MÔN -->
+        <h3>Chọn môn học cần đánh giá *</h3>
+
+        <div id="subjectList"></div>
+
+        <!-- FORM -->
+        <div id="surveyBox" style="display:none;">
+
+            <h2>Khảo sát đánh giá chất lượng giảng dạy</h2>
+            <p class="desc">Khảo sát đánh giá chất lượng giảng dạy môn học</p>
+            <p class="scale">1 = Rất không hài lòng | 5 = Rất hài lòng</p>
+
+            <div id="questionList"></div>
+
+            <!-- Ý kiến -->
+            <h3>Ý kiến đóng góp (không bắt buộc)</h3>
+            <textarea id="comment" maxlength="500"
+                placeholder="Nhập ý kiến đóng góp của bạn về môn học (tối đa 500 ký tự)..."></textarea>
+            <p id="count">0/500 ký tự</p>
+
+            <!-- NOTE -->
+            <div class="note">
+                Lưu ý: Phản hồi của bạn sẽ được ghi nhận dưới dạng ẩn danh để đảm bảo tính khách quan và bảo mật thông
+                tin cá nhân.
+            </div>
+
+            <!-- BUTTON -->
+            <div class="actions">
+                <button class="btn-submit" onclick="submitSurvey()">Gửi khảo sát</button>
+                <button class="btn-cancel">Hủy</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="survey.js"></script>
+</body>
+
+</html>
